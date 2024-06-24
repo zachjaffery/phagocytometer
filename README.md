@@ -10,11 +10,11 @@ Additionally, several packages are required. The package installer 'pip' shoudld
 
 Then, in the terminal (Windows Key + X -> Terminal), paste and run the following code:
 
-> pip install numpy
-pip install pandas
-pip install opencv-python
-pip install tk
-pip install customtkinter
+>pip install numpy<br />
+>pip install pandas<br />
+>pip install opencv-python<br />
+>pip install tk<br />
+>pip install customtkinter
 
 
 

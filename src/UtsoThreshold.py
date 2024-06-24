@@ -34,9 +34,14 @@ def utsoThreshold(img_title, useBlur):
     if useBlur:
         image = cv2.GaussianBlur(image,(5,5),(0))
 
-    utso_threshold, image_result = cv2.threshold(
-        image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU,
-    )
+    if np.average(image) <= 3:
+        utso_threshold, image_result = cv2.threshold(
+         image, 10, 255, cv2.THRESH_BINARY
+        )
+    else:
+        utso_threshold, image_result = cv2.threshold(
+            image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU,
+        )
 
     return utso_threshold
 

@@ -6,7 +6,7 @@ To download the program, [go to source code](https://github.com/zachjaffery/phag
 
 ## Installation
 
-The program relies on python, so prior to use python and the required libraries must be installed. You can find this at [python.org](python.org). The program was built in version 3.9.1, but may work on other versions.
+The program relies on python, so prior to use python must be installed. You can find this at [python.org](python.org). The program was built in version 3.9.1, but may work on other versions.
 
 Additionally, several packages are required. The package installer 'pip' shoudld come automatically with python, but follow instruction at [https://packaging.python.org/en/latest/tutorials/installing-packages/](https://packaging.python.org/en/latest/tutorials/installing-packages/) to ensure you have it.
 

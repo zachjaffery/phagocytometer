@@ -10,12 +10,13 @@ Additionally, several packages are required. The package installer 'pip' shoudld
 
 Then, in the terminal (Windows Key + X -> Terminal), paste and run the following code:
 
->pip install numpy<br />
->pip install pandas<br />
->pip install opencv-python<br />
->pip install tk<br />
->pip install customtkinter
-
+```
+pip install numpy
+pip install pandas
+pip install opencv-python
+pip install tk
+pip install customtkinter
+```
 
 
 ## Usage
@@ -27,6 +28,33 @@ You also may want to choose a name for the CSV file being created. If no name is
 
 If you click on the button in the lower left corner, the batch processing dialog will open. You can select as many TIFs as you want, and the program will count them all. Currently, file name is set to "batch_1," "batch_2," etc. 
 
+## Methodology 
+
+A brief explanation of how the code works:
+1. Split the tiff file into individual images, ignoring the DIC channel
+2. For each image, calculate the Otsu threshold value (https://en.wikipedia.org/wiki/Otsu%27s_method) and use that to make a binary image. A binary, as the name implies, contains two values, white and black. White is where cells are, black is where cells aren't. A Gaussian blur may also be applied to make a better binary.
+3. To count the neutrophils, the code counts every continous white section (per [this code](https://stackoverflow.com/a/47570902/24016481) from user *alkasm*)
+4. Counting phagocytosis
+a. First, the neutrophil binary and yeast binary are multiplied. Since the value of white is 1 and the value of black is 0, the product of two binary images is white only where both images were white. The program assumes that any overlap between a neutrophil and a yeast is phagocytosis. This is an approximation, so some inaccuracy may be present
+b. The image is counted as before
+5. Neutrophil counts and phagocytosis counts for every slide are written to a CSV file
+
+```mermaid
+graph TD;
+    TIF-->Neu;
+    TIF-->Yeast;
+    Neu-->NeuBinary;
+    Yeast-->YeastBinary;
+    NeuBinary --> NeuCount;
+    NeuBinary --> PhagoBinary;
+    YeastBinary --> PhagoBinary;
+    PhagoBinary --> PhagoCount;
+    NeuCount --> CSV;
+    PhagoCount --> CSV;
+```
+## Upcoming Features
+- Custom batch file naming
+- Customizable channel order
 
 ## Issues
-Please direct all issues, or feature suggestions, to zachjaffery@gmail.com. I will try to help as best I can. 
+Please direct all issues, bugs, or feature suggestions, to zachjaffery@gmail.com. I will try to help as best I can. 

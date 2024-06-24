@@ -2,6 +2,8 @@
 
 This program was made to expedite counting cells after imaging. Images are taken with neutrophils stained one color and yeast stained another, then the painstaking task of counting each image is performed. With this program, you can run some code and receive a CSV of cell counts for each photo taken.
 
+To download the program, [go to source code](https://github.com/zachjaffery/phagocytometer), click "Code," and "Download Zip."
+
 ## Installation
 
 The program relies on python, so prior to use python and the required libraries must be installed. You can find this at [python.org](python.org). The program was built in version 3.9.1, but may work on other versions.

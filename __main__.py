@@ -348,7 +348,9 @@ class TabView(customtkinter.CTkTabview):
         dir, greenBin, blueBin = bulkToBinary(greenPath, bluePath, dir)
         colorTif(greenBin, blueBin, dir)
 
+
     def FileError(self):
+        # if file not found
         messagebox.showerror(message="Please select a file.", type='ok', icon='warning')
 
 class App(customtkinter.CTk):
@@ -373,6 +375,7 @@ class App(customtkinter.CTk):
         self.tab_view.pack(padx=20,pady=20, anchor='center') 
         icon = tk.PhotoImage(file = 'assets/phagocytometer_icon.png')
         self.iconphoto(False, icon)
+
 if __name__ == '__main__':
     app = App()
     app.mainloop()

@@ -325,20 +325,25 @@ class TabView(customtkinter.CTkTabview):
         alert = str(numFiles)+" files counted."
         messagebox.showinfo(message=alert, type="ok")
 
+    def colorComplete(self):
+        alert = 'Files colored.'
+        messagebox.showinfo(message=alert, type="ok")
+
     def getColorOpen(self):
-        global file_path
-        file_path = getPath()
+        global color_file_path
+        color_file_path = getPath()
 
-        if file_path != "":
+        if color_file_path != "":
 
-            self.openText.configure(state="normal")
-            self.openText.delete("0.0", "end")
-            self.openText.insert("0.0",file_path)
-            self.openText.configure(state="disabled")
+            self.openColorText.configure(state="normal")
+            self.openColorText.delete("0.0", "end")
+            self.openColorText.insert("0.0",color_file_path)
+            self.openColorText.configure(state="disabled")
 
     def tryColor(self):
         try:
-            self.colorFile(file_path)
+            self.colorFile(color_file_path)
+            self.colorComplete()
         except NameError:
             self.FileError()
 

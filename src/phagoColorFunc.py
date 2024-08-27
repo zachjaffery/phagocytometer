@@ -114,7 +114,7 @@ def colorTif(greenbin, bluebin, dir, ):
             
             filename = 'colormap'+str(i+1).rjust(3,'0')+'.jpg'
         
-            cv2.imwrite(filename, colorPhago(dir, bluesSorted[i],greensSorted[i],filename,False))
+            colorPhago(dir, currBluePath,currGreenPath,filename,False)
 
 def sequenceToMovie(imgs):
 

@@ -90,7 +90,7 @@ def colorPhago(dir, yeastPath, neuPath, filename, doCount):
 
 
 
-def colorTif(greenbin, bluebin, dir, ):
+def colorTif(greenbin, bluebin, dir, export_format):
     greenFolder = os.listdir(greenbin)
     blueFolder = os.listdir(bluebin)
 

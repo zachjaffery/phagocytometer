@@ -208,11 +208,20 @@ class TabView(customtkinter.CTkTabview):
         self.delColorCheck = customtkinter.CTkCheckBox(colorTab,text="Delete binary images after counting?",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1)
         self.delColorCheck.grid(row=3, column=2, sticky='ew')
 
+
+        self.label = customtkinter.CTkLabel(colorTab,text='File format:', wraplength=350)
+        self.label.grid(row=4, column=1, sticky='w')
+
+        self.formatVal = customtkinter.StringVar(value="JPG Sequence")
+        self.exportFormat = customtkinter.CTkOptionMenu(colorTab,values=['JPG Sequence','TIFF','MP4'], variable=self.formatVal, fg_color='white',text_color='black')
+        self.exportFormat.grid(row=4, column=2, sticky='ew')
+
+
         self.runColor = customtkinter.CTkButton(colorTab, text="Process File", command=self.tryColor)
         self.runColor.grid(row=4, column=3, sticky='ew')
         
         self.empty00 = customtkinter.CTkFrame(colorTab, fg_color="transparent", height=5, width=15)
-        self.empty00.grid(row=2,column=4,padx=5,pady=5)
+        self.empty00.grid(row=5,column=4,padx=5,pady=5)
 
     def fullCount(self, tifPath, CSVname, useBlur, useZ):
         global csvpath
@@ -351,7 +360,8 @@ class TabView(customtkinter.CTkTabview):
         
         dir, greenPath, bluePath, tmpfolder = bulkToImg(inputtiff)
         dir, greenBin, blueBin = bulkToBinary(greenPath, bluePath, dir)
-        colorTif(greenBin, blueBin, dir)
+        exportFormat = self.exportFormat.get()
+        colorTif(greenBin, blueBin, dir, exportFormat)
 
 
     def FileError(self):

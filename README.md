@@ -1,6 +1,11 @@
 
 
 
+
+
+<!-- # Phagocytometer
+This program was created to assist in quantifying and characterizing images from epi-fluoresceence microscopy.  -->
+
 ### Necessary Packages
 For this program to run, several python packages are required (numpy, pandas, cv2, Tkinter, and CustomTkinter). To install them, paste the following code into your terminal:
 
@@ -15,4 +20,25 @@ For this program to run, several python packages are required (numpy, pandas, cv
 > pip install customtkinter
 
 ### Usage
-To run the program, navigate to the "____main__ __.py" file and run it. The application should open, and from there a file can be selected and processed. Also available is batch processing and color mapping. 
+To run the program, navigate to the "____main__ __.py" file and run it. The application should open, and from there a TIFF file can be selected and processed. Also available is batch processing and color mapping. 
+
+### Methodology
+
+First, a TIFF file is separated into its component images, which are then thresholded using [Otsu's Method](https://en.wikipedia.org/wiki/Otsu's_method). The cells in the images are counted, and then the binary neutrophil and binary yeast images are multiplied, yielding a binary image where only overlap between the yeast and neutrophil have a value of 1. After pre-processing to clean up the multiplied image, it is counted, yiedling a crude value for the number of neutrophil-yeast interactions in a given frame. Compared to human-counted images, the program returns a slightly lower number of interactions, so the option to use an experimentally determined scale factor is available.
+
+Alternate methods for determining phagocytosis, such as looking for complete enclosure of a yeast by a neutrophil, is being explored.
+
+Color mapping provides a visual display of neutrophil-yeast interactions, and may help to expedite human counting by simplifying the image being analyzed. The process is similar to the counting algorithm but utilizes some additional operations and processing to give a four distinct colored sections.
+
+##### Counting Workflow
+```mermaid
+graph LR;
+    TIFF-->Yeast_Image;
+    TIFF-->Neutrophil_Image;
+    Yeast_Image-->Yeast_Binary;
+    Neutrophil_Image-->Neutrophil_Binary;
+    Yeast_Binary--multiplication-->Yeast_Neutrophil_Overlap;
+    Neutrophil_Binary--multiplication-->Yeast_Neutrophil_Overlap;
+    
+    Yeast_Neutrophil_Overlap --count--> CSV;
+```

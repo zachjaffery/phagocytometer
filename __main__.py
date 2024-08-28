@@ -213,7 +213,7 @@ class TabView(customtkinter.CTkTabview):
         self.label.grid(row=4, column=1, sticky='w')
 
         self.formatVal = customtkinter.StringVar(value="JPG Sequence")
-        self.exportFormat = customtkinter.CTkOptionMenu(colorTab,values=['JPG Sequence','TIFF','MP4'], variable=self.formatVal, fg_color='white',text_color='black')
+        self.exportFormat = customtkinter.CTkOptionMenu(colorTab,values=['JPG Sequence','MP4'], variable=self.formatVal, fg_color='white',text_color='black')
         self.exportFormat.grid(row=4, column=2, sticky='ew')
 
 

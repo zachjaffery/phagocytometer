@@ -123,13 +123,30 @@ def colorTif(greenbin, bluebin, dir, export_format):
             
                 cv2.imwritemulti(outpath, imgs[i])
 
-        elif export_format == 'TIFF':
-
-            print("TIFF coming soon!")
-
         elif export_format == 'MP4':
-            print("Movie coming soon!")
+
+
+            height,width,layers=imgs[0].shape
+
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            videoName = os.path.join(outfolder,'colored_sequence.mp4')
+            video = cv2.VideoWriter(
+                filename=videoName,
+                apiPreference=cv2.CAP_FFMPEG,
+                fourcc=fourcc,
+                fps=10,
+                frameSize=(width,height),
+                params=[
+                    cv2.VIDEOWRITER_PROP_DEPTH,
+                    cv2.CV_8U,
+                    cv2.VIDEOWRITER_PROP_IS_COLOR,
+                    1
+                ]
+                )
             
+            for i in range(len(imgs)):
+                video.write(imgs[i])
+            video.release()
 
 def sequenceToMovie(imgs):
 

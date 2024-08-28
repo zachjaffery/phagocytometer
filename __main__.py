@@ -169,16 +169,16 @@ class TabView(customtkinter.CTkTabview):
 
         # experimentally decided scale value, subject to change
         self.useZ = IntVar(value=1)
-        self.zCheck = customtkinter.CTkCheckBox(batchTab,text="Use Z-adjustment? (recommended)",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1,variable=self.useZ)
-        self.zCheck.grid(row=5,column=2,sticky="w")
+        self.zBatchCheck = customtkinter.CTkCheckBox(batchTab,text="Use Z-adjustment? (recommended)",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1,variable=self.useZ)
+        self.zBatchCheck.grid(row=5,column=2,sticky="w")
         
         # gaussian blur option
-        self.blurCheck = customtkinter.CTkCheckBox(batchTab,text="Use Gaussian blur for thresholding? (Helpful for noisy images)",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1)
-        self.blurCheck.grid(row=6,column=2, sticky="w")
+        self.blurBatchCheck = customtkinter.CTkCheckBox(batchTab,text="Use Gaussian blur for thresholding? (Helpful for noisy images)",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1)
+        self.blurBatchCheck.grid(row=6,column=2, sticky="w")
 
         # option to save binary images
-        self.delCheck = customtkinter.CTkCheckBox(batchTab,text="Delete binary images after counting?",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1)
-        self.delCheck.grid(row=7,column=2, sticky="w")
+        self.delBatchCheck = customtkinter.CTkCheckBox(batchTab,text="Delete binary images after counting?",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1)
+        self.delBatchCheck.grid(row=7,column=2, sticky="w")
         
         # button to count the file
         self.countButton = customtkinter.CTkButton(batchTab,command=self.batchProcessFiles,text="Count Files",text_color='white')
@@ -358,8 +358,9 @@ class TabView(customtkinter.CTkTabview):
 
     def colorFile(self, inputtiff):
         
+        blur = self.blurColorCheck.get()
         dir, greenPath, bluePath, tmpfolder = bulkToImg(inputtiff)
-        dir, greenBin, blueBin = bulkToBinary(greenPath, bluePath, dir)
+        dir, greenBin, blueBin = bulkToBinary(greenPath, bluePath, dir,blur)
         exportFormat = self.exportFormat.get()
         
         colorTif(greenBin, blueBin, dir, exportFormat)

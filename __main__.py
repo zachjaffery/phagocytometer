@@ -361,6 +361,7 @@ class TabView(customtkinter.CTkTabview):
         dir, greenPath, bluePath, tmpfolder = bulkToImg(inputtiff)
         dir, greenBin, blueBin = bulkToBinary(greenPath, bluePath, dir)
         exportFormat = self.exportFormat.get()
+        
         colorTif(greenBin, blueBin, dir, exportFormat)
 
 

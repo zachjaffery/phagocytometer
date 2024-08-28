@@ -4,7 +4,7 @@ import numpy as np
 
 
 
-def colorPhago(dir, yeastPath, neuPath, filename, doCount):
+def colorPhago(dir, yeastPath, neuPath, doCount):
 
     # define kernels
     dilKernel = np.ones((1,1),np.uint8)
@@ -70,22 +70,13 @@ def colorPhago(dir, yeastPath, neuPath, filename, doCount):
     sub8color[phago_mask > 0] = bgr_purple
 
 
-    # create output and write to phago folder
+    return sub8color
 
-    outfolder = os.path.join(dir, 'colorMaps/')
-
-    if os.path.exists(outfolder) == False:
-        os.mkdir(outfolder)
-    
-    outpath = os.path.join(outfolder, filename)
-    
-    cv2.imwrite(outpath, sub8color)
-
-    if doCount:
-        phago_count = cv2.connectedComponentsWithStats(phago_mask)[0]
-        return phago_count
-    else:
-        return None
+    # if doCount:
+    #     phago_count = cv2.connectedComponentsWithStats(phago_mask)[0]
+    #     return phago_count
+    # else:
+    #     return None
 
 
 
@@ -99,10 +90,18 @@ def colorTif(greenbin, bluebin, dir, export_format):
 
     if len(greensSorted) == len(bluesSorted):
 
-       
+        imgs = []
+        img_names = []
         if os.path.exists(dir) == False:
             os.mkdir(dir)
 
+        # create output and write to phago folder
+
+        outfolder = os.path.join(dir, 'colorMaps/')
+
+        if os.path.exists(outfolder) == False:
+            os.mkdir(outfolder)
+        
         
         for i in range(len(greensSorted)):
 
@@ -113,10 +112,41 @@ def colorTif(greenbin, bluebin, dir, export_format):
             currBluePath = os.path.join(bluebin,currBlue)
             
             filename = 'colormap'+str(i+1).rjust(3,'0')+'.jpg'
-        
-            colorPhago(dir, currBluePath,currGreenPath,filename,False)
+            colored_img = colorPhago(dir, currBluePath,currGreenPath,False)
+
+            imgs.append(colored_img)
+            img_names.append(filename)
+
+        if export_format == 'JPG Sequence':
+            for i in range(len(imgs)):
+                outpath = os.path.join(outfolder, img_names[i])
+            
+                cv2.imwritemulti(outpath, imgs[i])
+
+        elif export_format == 'TIFF':
+
+            print("TIFF coming soon!")
+
+        elif export_format == 'MP4':
+            print("Movie coming soon!")
+            
 
 def sequenceToMovie(imgs):
 
     coloredImgs = os.listdir(imgs)
     
+def sequenceToTif(imgs, dir):
+
+    coloredImgs = os.listdir(imgs)
+    imgSeq = []
+
+    for i in range(len(coloredImgs)):
+
+        currPath = os.path.join(dir, coloredImgs[i])
+        
+        img = cv2.imread(currPath)
+        imgSeq.append(img)
+
+    filename = "tiff_color.tif"
+    filepath = os.path.join(dir, filename)
+    cv2.imwrite(filepath,imgSeq)

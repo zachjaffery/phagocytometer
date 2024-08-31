@@ -148,9 +148,6 @@ def colorTif(greenbin, bluebin, dir, export_format):
                 video.write(imgs[i])
             video.release()
 
-def sequenceToMovie(imgs):
-
-    coloredImgs = os.listdir(imgs)
     
 def sequenceToTif(imgs, dir):
 

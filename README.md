@@ -2,24 +2,21 @@
 
 
 
-
-<!-- # Phagocytometer
-This program was created to assist in quantifying and characterizing images from epi-fluoresceence microscopy.  -->
+# Phagocytometer 
+###### By Zach Jaffery, v0.1.0-beta
 
 ### Necessary Packages
+
 For this program to run, several python packages are required (numpy, pandas, cv2, Tkinter, and CustomTkinter). To install them, paste the following code into your terminal:
 
-> pip install numpy
-> 
-> pip install pandas
-> 
-> pip install opencv-python
-> 
-> sudo apt-get install python3-tk
-> 
-> pip install customtkinter
-
+    pip install numpy
+    pip install pandas
+    pip install opencv-python
+    sudo apt-get install python3-tk
+    pip install customtkinter
+    
 ### Usage
+
 To run the program, navigate to the "____main__ __.py" file and run it. The application should open, and from there a TIFF file can be selected and processed. Also available is batch processing and color mapping. 
 
 ### Methodology
@@ -31,8 +28,9 @@ Alternate methods for determining phagocytosis, such as looking for complete enc
 Color mapping provides a visual display of neutrophil-yeast interactions, and may help to expedite human counting by simplifying the image being analyzed. The process is similar to the counting algorithm but utilizes some additional operations and processing to give a four distinct colored sections.
 
 ##### Counting Workflow
+
 ```mermaid
-graph LR;
+graph TD;
     TIFF-->Yeast_Image;
     TIFF-->Neutrophil_Image;
     Yeast_Image-->Yeast_Binary;
@@ -42,3 +40,27 @@ graph LR;
     
     Yeast_Neutrophil_Overlap --count--> CSV;
 ```
+##### Coloring Workflow
+
+```mermaid
+graph TD;
+    TIFF-->Yeast_Image;
+    TIFF-->Neutrophil_Image;
+    Yeast_Image-->Yeast_Binary;
+    Neutrophil_Image-->Neutrophil_Binary;
+    Yeast_Binary--multiplication-->Yeast_Neutrophil_Overlap;
+    Neutrophil_Binary--multiplication-->Yeast_Neutrophil_Overlap;
+    
+    Yeast_Binary--Smoothing--->Blue_Mask;
+    Neutrophil_Binary--Smoothing--->Green_Mask;
+    Yeast_Neutrophil_Overlap--Smoothing--->Red_Mask;
+    Background-->Grey_Mask;
+
+    Blue_Mask-->Colored_Image;
+    Green_Mask-->Colored_Image;
+    Red_Mask-->Colored_Image;
+    Grey_Mask-->Colored_Image;
+```
+### Coming Soon
+* .nd2 processing
+* channel customization

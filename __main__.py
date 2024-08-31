@@ -17,7 +17,7 @@ from src.ChannelsToPhagocytosis import splitAndCountPhago
 from src.ChannelsToTouching import splitAndCountInt
 from src.BatchOpen import batchOpen 
 from src.stats import makeStats
-from src.phagoColorFunc import colorTif, sequenceToMovie
+from src.phagoColorFunc import colorTif
 
 
 

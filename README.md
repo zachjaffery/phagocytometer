@@ -3,11 +3,16 @@
 
 
 # Phagocytometer 
-###### By Zach Jaffery, v0.1.0-beta
+###### By Zach Jaffery, v1.0.0
+
+### About
+
+This program was made to aid in processing timelapse images from epi-fluorescence microscopy, specifically yeast-neutrophil movies.
 
 ### Necessary Packages
 
-For this program to run, several python packages are required (numpy, pandas, cv2, Tkinter, and CustomTkinter). To install them, paste the following code into your terminal:
+The program is built completely with python, so this must be downloaded and installed. 
+Additionally, several python packages are required (numpy, pandas, cv2, Tkinter, and CustomTkinter). To install them, paste the following code into your terminal:
 
     pip install numpy
     pip install pandas
@@ -15,9 +20,10 @@ For this program to run, several python packages are required (numpy, pandas, cv
     sudo apt-get install python3-tk
     pip install customtkinter
     
+Alternativally, the packages can manually be downloaded and installed, but ``pip`` function that comes automatically with python is much simpler. 
 ### Usage
 
-To run the program, navigate to the "____main__ __.py" file and run it. The application should open, and from there a TIFF file can be selected and processed. Also available is batch processing and color mapping. 
+To run the program, navigate to the "Phagocytometer.py" file and open it in IDLE3 (should come with python). Go to the 'Run' Tab and press 'Run Module' (Hotkey F5 by default). The program should then open, and you can proceed with processing.
 
 ### Methodology
 

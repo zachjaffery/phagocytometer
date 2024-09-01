@@ -119,9 +119,11 @@ class TabView(customtkinter.CTkTabview):
 
         """         BATCH TAB CODE           """
 
+        # spacer frame
         self.emptyTop = customtkinter.CTkFrame(batchTab,fg_color="transparent", height=10)
         self.emptyTop.grid(row=0, column=3)
 
+        # spacer frame
         self.empty00 = customtkinter.CTkFrame(batchTab, fg_color="transparent", height=5, width=15)
         self.empty00.grid(row=1,column=0,padx=5,pady=5)
 
@@ -155,19 +157,24 @@ class TabView(customtkinter.CTkTabview):
         self.empty11 = customtkinter.CTkFrame(batchTab, fg_color="transparent", height=5, width=spacerWidth)
         self.empty11.grid(row=2,column=3,padx=5,pady=5, sticky='ew')
 
+        # spacer frame
         self.empty12 = customtkinter.CTkFrame(batchTab, fg_color="transparent", height=5, width=15)
         self.empty12.grid(row=2,column=4,padx=5,pady=5)
 
+        # spacer frame
         self.empty01 = customtkinter.CTkFrame(batchTab, fg_color="transparent", height=15, width=5)
         self.empty01.grid(row=3,column=1,padx=5,pady=5, sticky='e')
 
+        # 'n' files selected textbox
         self.selectedtext = customtkinter.CTkTextbox(batchTab, bg_color="transparent", fg_color="transparent",state='disabled', height=15)
         self.selectedtext.grid(row=3, column=2, padx=5,pady=5, sticky='')
-
+        
+        # spacer frame
         self.empty01 = customtkinter.CTkFrame(batchTab, fg_color="transparent", height=5, width=15)
         self.empty01.grid(row=4,column=2,padx=5,pady=5, sticky='w')
 
         # experimentally decided scale value, subject to change
+        # to change this value, see 'declarations.py'
         self.useZ = IntVar(value=1)
         self.zBatchCheck = customtkinter.CTkCheckBox(batchTab,text="Use Z-adjustment? (recommended)",checkbox_width=15,checkbox_height=15,border_width=1,corner_radius=1,variable=self.useZ)
         self.zBatchCheck.grid(row=5,column=2,sticky="w")
@@ -186,17 +193,21 @@ class TabView(customtkinter.CTkTabview):
 
         
         """         COLOR TAB CODE          """
+
+        # spacer frame
         self.empty00 = customtkinter.CTkFrame(colorTab, fg_color="transparent", height=5, width=15)
         self.empty00.grid(row=1,column=0,padx=5,pady=5)
 
-
+        
         self.label = customtkinter.CTkLabel(colorTab,text='Select a TIFF file to color:', wraplength=350)
         self.label.grid(row=1, column=1, sticky='w')
+
         # select file box
         self.openColorText = customtkinter.CTkTextbox(colorTab, height=5, width=100, text_color="#6B6B6B")
         self.openColorText.insert("0.0","Filename will appear here")
         self.openColorText.grid(row=1,column=2, padx=5,pady=5,sticky='ew')
         self.openColorText.configure(state="disabled")
+
 
         self.colorButton = customtkinter.CTkButton(colorTab, text="Select File",command=self.getColorOpen)
         self.colorButton.grid(row=1, column=3, sticky='ew')
@@ -212,6 +223,7 @@ class TabView(customtkinter.CTkTabview):
         self.label = customtkinter.CTkLabel(colorTab,text='File format:', wraplength=350)
         self.label.grid(row=4, column=1, sticky='w')
 
+        # file format for output selector
         self.formatVal = customtkinter.StringVar(value="JPG Sequence")
         self.exportFormat = customtkinter.CTkOptionMenu(colorTab,values=['JPG Sequence','MP4'], variable=self.formatVal, fg_color='white',text_color='black')
         self.exportFormat.grid(row=4, column=2, sticky='ew')
@@ -223,36 +235,57 @@ class TabView(customtkinter.CTkTabview):
         self.empty00 = customtkinter.CTkFrame(colorTab, fg_color="transparent", height=5, width=15)
         self.empty00.grid(row=5,column=4,padx=5,pady=5)
 
+
     def fullCount(self, tifPath, CSVname, useBlur, useZ):
+
+        # function to run all processing/counting functions in sequence
+          
         global csvpath
 
-        sensActive = False
+        # for sensitivity slider, maybe coming back later. 
+        # sensActive = False
         
-        if sensActive:
-            sens = self.sensSlider.get()
-        else:
-            sens = 0
+        # if sensActive:
+        #     sens = self.sensSlider.get()
+        # else:
+        #     sens = 0
 
 
-        
+        # split tiff into separate images
         dir1, greenPath1, bluePath1, tmpfolder = bulkToImg(tifPath)
-        dir2, greenBin1, blueBin1 = bulkToBinary(greenPath1, bluePath1, dir1, useBlur, sens)
+        # turn those images into thresholded imgs
+        dir2, greenBin1, blueBin1 = bulkToBinary(greenPath1, bluePath1, dir1, useBlur)
+        # count the neutrophil folder
         csvpath = countNeus(greenBin1, blueBin1, dir2, CSVname)
         
+        # soon will be able to differentiate between phagocytosis and all interactions (hopefully!)
         if self.countPhagoCheck.get():
             splitAndCountPhago(greenBin1, blueBin1, dir2, csvpath, useZ)
         if self.countInteractCheck.get():
             splitAndCountInt(greenBin1, blueBin1, dir2, csvpath, useZ)
         
+        # basic percentage average calculations to add to CSV
         makeStats(csvpath)
+
+        # delete temporary images, if computer perms allow
         isDelete = self.delCheck.get()
         if isDelete:
-            shutil.rmtree(tmpfolder)
+            try:
+                shutil.rmtree(tmpfolder)
+            except PermissionError:
+                self.permissionError()
 
+    def permissionError(): 
+        messagebox.showerror(message="Permission to delete files was denied. To manually delete, navigate to the Phagocytometer folder and delete 'tmp' folder and/or 'mult' folder.", type='ok', icon='warning')
+
+    
     def getOpenPath(self):
+        # popup to select single file
+
         global file_path
         file_path = getPath()
 
+        # set filename texbox to selected file
         if file_path != "":
 
             self.openColorText.configure(state="normal")
@@ -260,20 +293,21 @@ class TabView(customtkinter.CTkTabview):
             self.openColorText.insert("0.0",file_path)
             self.openColorText.configure(state="disabled")
 
+
     def sliderUpdate(self, inp):
-        
-        
+        # update UI when sens changes
+
         if inp > 0:
             strOut = "+"+str(int(inp))
             self.sensVal.configure(text=strOut)
         else:
             self.sensVal.configure(text=str(int(inp)))
 
-    def noFileError(self):
-        messagebox.showerror(message="Please select a file.", type='ok', icon='warning')
     
 
     def runCount(self):
+        # initiates processing sequence and collects necessary variables
+
         blurState = self.blurCheck.get()
         useZ = self.zCheck.get()
         CSVname = self.outputText.get("0.0",END)
@@ -281,12 +315,17 @@ class TabView(customtkinter.CTkTabview):
             self.fullCount(file_path, CSVname, blurState,useZ)
             self.countComplete()
         except NameError:
-            self.noFileError()
+            self.FileError()
+
 
     def countComplete(self):
+
         messagebox.showinfo(message="File counted.", type="ok")
 
+
     def getBatchOpen(self):
+        # popup to get multiple files
+
         global files
         files = batchOpen()
         global numFiles
@@ -299,12 +338,15 @@ class TabView(customtkinter.CTkTabview):
         self.selectedtext.configure(state="disabled")
 
     def tryProcess(self):
+        # initiates batch processings
+
         try:
             self.batchProcessFiles(files)
         except NameError:
             self.FileError()
 
     def batchProcessFiles(self, files):
+        # runs full counting sequence for multiple files
 
         global csvpath
         

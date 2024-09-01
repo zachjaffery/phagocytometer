@@ -1,7 +1,2 @@
-
-test_path = '/Users/zachjaffery/Desktop/test raw photos/BlueRaw'
-test_output = '/Users/zachjaffery/Desktop/test raw photos/Output'
-
-#important adjustment factor:
-
+# adjustment factor based on comparison to PV's counting
 z_factor = 1.2

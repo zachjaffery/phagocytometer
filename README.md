@@ -3,6 +3,7 @@
 
 
 # Phagocytometer 
+
 ###### By Zach Jaffery, v1.0.0
 
 ### About
@@ -21,6 +22,7 @@ Additionally, several python packages are required (numpy, pandas, cv2, Tkinter,
     pip install customtkinter
     
 Alternativally, the packages can manually be downloaded and installed, but ``pip`` function that comes automatically with python is much simpler. 
+
 ### Usage
 
 To run the program, navigate to the "Phagocytometer.py" file and open it in IDLE3 (should come with python). Go to the 'Run' Tab and press 'Run Module' (Hotkey F5 by default). The program should then open, and you can proceed with processing.
@@ -68,5 +70,6 @@ graph TD;
     Grey_Mask-->Colored_Image;
 ```
 ### Coming Soon
+
 * .nd2 processing
 * channel customization

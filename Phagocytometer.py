@@ -258,12 +258,16 @@ class TabView(customtkinter.CTkTabview):
         # count the neutrophil folder
         csvpath = countNeus(greenBin1, blueBin1, dir2, CSVname)
         
-        # soon will be able to differentiate between phagocytosis and all interactions (hopefully!)
+        """ # soon will be able to differentiate between phagocytosis and all interactions (hopefully!)
         if self.countPhagoCheck.get():
             splitAndCountPhago(greenBin1, blueBin1, dir2, csvpath, useZ)
         if self.countInteractCheck.get():
             splitAndCountInt(greenBin1, blueBin1, dir2, csvpath, useZ)
         
+            for now, use interaction algo:
+        """
+        splitAndCountInt(greenBin1, blueBin1, dir2, csvpath, useZ)
+
         # basic percentage average calculations to add to CSV
         makeStats(csvpath)
 

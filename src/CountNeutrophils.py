@@ -30,8 +30,8 @@ def countNeus(greenbinpath, bluebinpath, baseDir, CSVname=None):
     frameNumber = []
 
     # count each image
-    for i in range(len(greenBinaries)):
-        filename = greenBinaries[i]
+    for i in range(len(greenBinsSorted)):
+        filename = greenBinsSorted[i]
         directory = greenBin
         fullPath = directory+filename
 

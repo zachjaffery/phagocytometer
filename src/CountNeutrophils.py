@@ -10,32 +10,15 @@ from datetime import datetime
 
 import pandas as pd
 
-def countNeus(greenbinpath, bluebinpath, baseDir, CSVname=None):
-    # Easy bit: count neutrophils
-
-    # establish file paths
-    greenBin = greenbinpath
-    blueBin = bluebinpath
-
-    # get folders as list
-    greenBinaries = os.listdir(greenBin)
-    blueBinaries = os.listdir(blueBin)
-
-    # sort folders by number
-    greenBinsSorted = sorted(greenBinaries)
-    blueBinsSorted = sorted(blueBinaries)
-
+def countNeus(neuBins, baseDir, CSVname=None):
     #empty lists
     neutrophilCount = []
     frameNumber = []
 
     # count each image
-    for i in range(len(greenBinsSorted)):
-        filename = greenBinsSorted[i]
-        directory = greenBin
-        fullPath = directory+filename
-
-        count = countCellsInImage(fullPath, 50)
+    for i in range(len(neuBins)):
+   
+        count = countCellsInImage(neuBins[i], 50)
         neutrophilCount.append(count)
         frameNumber.append(i+1)
 

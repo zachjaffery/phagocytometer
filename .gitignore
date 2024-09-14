@@ -2,3 +2,4 @@
 *.vscode
 /testing
 *test.py
+/deprecated

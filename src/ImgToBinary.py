@@ -25,11 +25,10 @@ def getPath():
 
 
 # Make binary image from utso threshold value
-def generateBinary(img_name,output_folder,output_name, useBlur, sensitivity):
+def generateBinary(image,useBlur=False, sensitivity=0):
     #t = utsoThreshold()
 
     # read image as MatLike
-    image = cv2.imread(img_name, 0)
     if useBlur:
         image = cv2.GaussianBlur(image,(3,3),(0))
 
@@ -53,23 +52,17 @@ def generateBinary(img_name,output_folder,output_name, useBlur, sensitivity):
         # make threshold using otsu value
         retval, thresh = cv2.threshold(image, adjusted_otsu, 255, cv2.THRESH_BINARY)
 
-        
-
-    # make file name
-    ext = ".jpg"
-    filename = output_name+ext
-
-    #print(filename)
-    # make filepath from name
-
-    out_filepath = os.path.join(output_folder, filename)
-    #print(out_filepath)
-
-    # write the output image
-    cv2.imwrite(out_filepath, thresh)
+    return thresh
     
+def fileToBinary(yeastImgs, neuImgs):
 
+    yeastBins = []
+    neuBins = []
+    for i in range(len(yeastImgs)):
+        yeastBins.append(generateBinary(yeastImgs[i]))
+    for i in range(len(neuImgs)):
+        neuBins.append(generateBinary(neuImgs[i]))
 
-    
+    return yeastBins, neuBins
 
 

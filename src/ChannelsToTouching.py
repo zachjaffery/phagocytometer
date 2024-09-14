@@ -7,53 +7,37 @@ import pandas as pd
 from src.CountCells import countCellsInImage
 from src.declarations import z_factor
 
-def splitAndCountInt(greenbin, bluebin, csvname, useZ,  binDir, saveMult=True):
+def splitAndCountInt(yeastBins, neuBins, csvname, useZ,  binDir, saveMult=False):
 
-    greenBin = greenbin
-    blueBin = bluebin
 
-    greenBinSorted = sorted(os.listdir(greenBin))
-    blueBinSorted = sorted(os.listdir(blueBin))
 
-    if len(greenBinSorted) == len(blueBinSorted):
-
-        # establish folders
-        neuDirectory = greenBin
-        yeastDirectory = blueBin
+    if len(yeastBins) == len(neuBins):
 
         #create data lists
+        multImgs = []
         phagoCount = []
-        fold = os.path.join(binDir,'/mult/')
-        if os.path.exists(fold) is False:
-            os.mkdir(fold)
-        for i in range(len(greenBinSorted)):
+        # fold = os.path.join(binDir,'mult')
+
+        # if os.path.exists(fold) is False:
+        #     os.mkdir(fold)
+        for i in range(len(yeastBins)):
 
             # read current neutrophil binary
-            neuFile = greenBinSorted[i]
+            neuFile = neuBins[i]
 
-            neuFilename = neuDirectory+neuFile
-            neuImg = cv2.imread(neuFilename,0)
 
-            # read current yeast binary
-            yeastFile = blueBinSorted[i]
+            yeastFile = yeastBins[i]
 
-            yeastFilename = yeastDirectory+yeastFile
-            yeastImg = cv2.imread(yeastFilename,0)
-            filename = (str(i)+".jpg")
-            
-            path = os.path.join(fold,filename)
-            # multiply to get phagocytosis
 
             kernel = np.ones((5,5),np.uint8)
 
-            mult = cv2.multiply(neuImg,yeastImg)
+            mult = cv2.multiply(neuFile,yeastFile)
             mult = cv2.morphologyEx(mult,cv2.MORPH_CLOSE,kernel)
             mult = cv2.dilate(mult,kernel, iterations=1)
-
+            multImgs.append(mult)
 
             count = countCellsInImage(mult)
-            if saveMult:
-                cv2.imwrite(path,mult)
+
             #Z-FACTOR ADJUSTMENT
             if useZ:
                 count = count*z_factor
@@ -65,9 +49,9 @@ def splitAndCountInt(greenbin, bluebin, csvname, useZ,  binDir, saveMult=True):
     CSVfilename = csvname
 
     df = pd.read_csv(CSVfilename)
-    df['Neutrophil Interactions'] = phagoCount
+    df['Adjusted Neutrophil Interactions'] = phagoCount
     df.to_csv(CSVfilename,index=False)
 
-
+    return multImgs
 
 

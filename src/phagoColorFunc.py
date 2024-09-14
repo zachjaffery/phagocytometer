@@ -4,13 +4,13 @@ import numpy as np
 
 
 
-def colorPhago(dir, yeastPath, neuPath, doCount):
+def colorPhago(dir, yeastBin, neuBin, doCount):
 
     # define kernels
-    dilKernel = np.ones((1,1),np.uint8)
+    dilateKernel = np.ones((1,1),np.uint8)
     morphKernel = np.ones((3,3),np.uint8)
 
-    # define colors
+    # define colors – will be choosable later on 
     bgr_grey = np.array([128,128,128])
     bgr_green = np.array([0, 219, 0])
 
@@ -25,12 +25,13 @@ def colorPhago(dir, yeastPath, neuPath, doCount):
 
 
     # read and pre-process individual binaries
+    if type(yeastBin) == str:
+        yeastBin = cv2.imread(yeastBin)
+    yeastImg =cv2.morphologyEx(yeastBin,cv2.MORPH_OPEN,morphKernel)
 
-    yeastImg = cv2.imread(yeastPath)
-    yeastImg =cv2.morphologyEx(yeastImg,cv2.MORPH_OPEN,morphKernel)
-
-    neuImg = cv2.imread(neuPath)
-    neuImg =cv2.morphologyEx(neuImg,cv2.MORPH_OPEN,morphKernel)
+    if type(neuBin) == str:
+        neuBin = cv2.imread(neuBin)
+    neuImg =cv2.morphologyEx(neuBin,cv2.MORPH_OPEN,morphKernel)
 
     #create 'phago' mult
     mult = cv2.multiply(yeastImg,neuImg)
@@ -46,12 +47,14 @@ def colorPhago(dir, yeastPath, neuPath, doCount):
     # add overlap value
     subwithPhago = scaleSub + mult*0.25
 
-
+    # convert to unsigned 8-bit
     sub8 = subwithPhago.astype(np.uint8)
 
     # differentiation in case we want to use sub8 later?
-    sub8color = sub8
+    sub8gray = sub8
 
+    sub8color = cv2.cvtColor(sub8gray, cv2.COLOR_GRAY2BGR)
+    
     # convert to HSV
     sub_hsv = cv2.cvtColor(sub8color, cv2.COLOR_BGR2HSV)
 
@@ -70,7 +73,7 @@ def colorPhago(dir, yeastPath, neuPath, doCount):
     sub8color[phago_mask > 0] = bgr_purple
 
 
-    return sub8color
+    return sub8color, mult
 
     # if doCount:
     #     phago_count = cv2.connectedComponentsWithStats(phago_mask)[0]
@@ -81,51 +84,46 @@ def colorPhago(dir, yeastPath, neuPath, doCount):
 
 
 
-def colorTif(greenbin, bluebin, dir, export_format):
-    greenFolder = os.listdir(greenbin)
-    blueFolder = os.listdir(bluebin)
+def colorTif(yeastBins, neuBins, dir, export_format):
 
-    greensSorted = sorted(greenFolder)
-    bluesSorted = sorted(blueFolder)
 
-    if len(greensSorted) == len(bluesSorted):
+    if len(yeastBins) == len(neuBins):
 
         imgs = []
+        multBins = []
         img_names = []
         if os.path.exists(dir) == False:
             os.mkdir(dir)
 
         # create output and write to phago folder
 
-        outfolder = os.path.join(dir, 'colorMaps/')
+        outfolder = os.path.join(dir, 'Colored Images/')
 
         if os.path.exists(outfolder) == False:
             os.mkdir(outfolder)
         
         
-        for i in range(len(greensSorted)):
+        for i in range(len(neuBins)):
 
-            currGreen = greensSorted[i]
-            currBlue = bluesSorted[i]
-
-            currGreenPath = os.path.join(greenbin,currGreen)
-            currBluePath = os.path.join(bluebin,currBlue)
+            currNeu = neuBins[i]
+            currYeast = yeastBins[i]
             
-            filename = 'colormap'+str(i+1).rjust(3,'0')+'.jpg'
-            colored_img = colorPhago(dir, currBluePath,currGreenPath,False)
-
+            filename = 'colored'+str(i+1).rjust(3,'0')+'.jpg'
+            colored_img, mult = colorPhago(dir, currYeast, currNeu, False)
+            multBins.append(mult)
             imgs.append(colored_img)
             img_names.append(filename)
 
         if export_format == 'JPG Sequence':
+            print("saving colored images...")
             for i in range(len(imgs)):
                 outpath = os.path.join(outfolder, img_names[i])
             
-                cv2.imwritemulti(outpath, imgs[i])
+                cv2.imwrite(outpath, imgs[i])
 
         elif export_format == 'MP4':
 
-
+            print("saving video...")
             height,width,layers=imgs[0].shape
 
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -147,7 +145,7 @@ def colorTif(greenbin, bluebin, dir, export_format):
             for i in range(len(imgs)):
                 video.write(imgs[i])
             video.release()
-
+        return multBins
     
 def sequenceToTif(imgs, dir):
 

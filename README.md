@@ -71,5 +71,5 @@ graph TD;
 ```
 ### Coming Soon
 
-* .nd2 processing
-* channel customization
+* custom cell colors for color mapping
+* support for more images with more than three channels

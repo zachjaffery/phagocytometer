@@ -1,15 +1,12 @@
 import os
 from os import listdir, mkdir, rmdir
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import messagebox
 import customtkinter
 from customtkinter import *
-import datetime
-from datetime import datetime
-import shutil
 import time
-import threading
 import cv2
+
 
 from src.ImgToBinary import getPath
 from src.CountNeutrophils import countNeus
@@ -535,13 +532,16 @@ class TabView(customtkinter.CTkTabview):
 
     def runCount(self):
         # initiates processing sequence and collects necessary variables
-
+        time1 = time.perf_counter()
         blurState = self.blurCheck.get()
         useZ = self.zCheck.get()
         CSVname = self.outputText.get("0.0",END)
         try:
             print(file_path)
             self.fullCount(file_path, CSVname, 'Single', blurState, useZ)
+            time2 = time.perf_counter()
+            duration = round(time2-time1,2)
+            print('Runtime: '+str(duration)+' seconds')
             self.countComplete()
         except NameError:
             self.FileError()
@@ -569,7 +569,7 @@ class TabView(customtkinter.CTkTabview):
 
     def tryProcess(self):
         # initiates batch processings
-        print(files)
+        
         try:
             self.batchProcessFiles(files)
         except NameError:
@@ -577,7 +577,7 @@ class TabView(customtkinter.CTkTabview):
 
     def batchProcessFiles(self, files):
         # runs full counting sequence for multiple files
-
+        time1 = time.perf_counter()
         global csvpath
         global currTiff
         for tif in range(numFiles):
@@ -587,7 +587,9 @@ class TabView(customtkinter.CTkTabview):
             # currName = "batch_"+str(tif)+".csv"
             currTiff = 'batch'+str(tif)
             self.fullCount(currImage, currName, 'Batch')
-            
+        time2 = time.perf_counter()
+        duration = round(time2-time1,2)
+        print('Runtime: '+str(duration)+' seconds')
         self.batchComplete()
 
 
@@ -612,7 +614,11 @@ class TabView(customtkinter.CTkTabview):
 
     def tryColor(self):
         try:
+            time1 = time.perf_counter()
             self.colorFile(color_file_path)
+            time2 = time.perf_counter()
+            duration = round(time2-time1,2)
+            print('Runtime: '+str(duration)+' seconds')
             self.colorComplete()
         except NameError as e:
             self.FileError()

@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
+import warnings
 
 def makeStats(filepath):
+
+    warnings.filterwarnings('ignore')
     df = pd.read_csv(filepath)
 
     percent = []

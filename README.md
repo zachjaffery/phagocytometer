@@ -4,7 +4,7 @@
 
 # Phagocytometer 
 
-###### By Zach Jaffery, v1.0.0
+###### By Zach Jaffery, v1.1.0
 
 ### About
 

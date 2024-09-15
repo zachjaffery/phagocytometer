@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 import customtkinter
 from customtkinter import *
+from CTkColorPicker import *
 import time
 import cv2
 
@@ -18,7 +19,87 @@ from src.phagoColorFunc import colorTif
 from src.processnd2 import nd2ToArray, arrayToImg
 from src.ImgToBinary import fileToBinary
 from src.SplitTiffs import tifChannelNames, tifToArrays
+from src.declarations import bgr_default, hex_default
 
+class TopLevelColors(customtkinter.CTkToplevel):
+    def __init__(self):
+        super().__init__()
+
+        def CenterWindowToDisplay(Screen: CTk, width: int, height: int, scale_factor: float = 1.0):
+                """Centers the window to the main display/monitor"""
+                screen_width = Screen.winfo_screenwidth()
+                screen_height = Screen.winfo_screenheight()
+                x = int(((screen_width/2) - (width/2)) * scale_factor)
+                y = int(((screen_height/2) - (height/1.5)) * scale_factor)
+                return f"{width}x{height}+{x}+{y}"
+        
+        self.title("Customize Colors")
+
+        self.geometry(CenterWindowToDisplay(self, 350, 250, self._get_window_scaling())) 
+
+        global hex_array
+        hex_array = hex_default
+        bgHex = hex_array[0]
+        neuHex = hex_array[1]
+        yeastHex = hex_array[2]
+        phagoHex = hex_array[3]
+
+        self.bgColorText = customtkinter.CTkLabel(self,text="Background Color: ")
+        self.bgColorText.grid(row=1,column=1,padx=10,pady=10)
+
+        self.bgColor = customtkinter.CTkButton(self,text="",command=self.askBgColor)
+        self.bgColor.grid(row=1,column=2,padx=10,pady=10)
+        self.bgColor.configure(fg_color=bgHex)
+
+        self.neuColorText = customtkinter.CTkLabel(self,text="Neutrophil Color: ")
+        self.neuColorText.grid(row=2,column=1,padx=10,pady=10)
+
+        self.neuColor = customtkinter.CTkButton(self,text="",command=self.askNeuColor)
+        self.neuColor.grid(row=2,column=2,padx=10,pady=10)
+        self.neuColor.configure(fg_color=neuHex)
+
+        self.yeastColorText = customtkinter.CTkLabel(self,text="Yeast Color: ")
+        self.yeastColorText.grid(row=3,column=1,padx=10,pady=10)
+
+        self.yeastColor = customtkinter.CTkButton(self,text="",command=self.askYeastColor)
+        self.yeastColor.grid(row=3,column=2,padx=10,pady=10)
+        self.yeastColor.configure(fg_color=yeastHex)
+
+        self.phagoColorText = customtkinter.CTkLabel(self,text="Interaction Color: ")
+        self.phagoColorText.grid(row=4,column=1,padx=10,pady=10)
+
+        self.phagoColor = customtkinter.CTkButton(self,text="",command=self.askPhagoColor)
+        self.phagoColor.grid(row=4,column=2,padx=10,pady=10)
+        self.phagoColor.configure(fg_color=phagoHex)
+
+        self.closeButton = customtkinter.CTkButton(self,text="Close",command=lambda: TopLevelColors.withdraw(self))
+        self.closeButton.grid(row=5,column=1,padx=10,pady=10)
+
+    def askBgColor(self):
+        pickBgColor = AskColor() # open the color picker
+        color = pickBgColor.get() # get the color string
+        self.bgColor.configure(fg_color=color)
+        hex_array[0] = color
+        TopLevelColors().focus
+    def askNeuColor(self):
+        pickNeuColor = AskColor() # open the color picker
+        color = pickNeuColor.get() # get the color string
+        self.neuColor.configure(fg_color=color)
+        hex_array[1] = color
+        TopLevelColors().focus
+    def askYeastColor(self):
+        pickYeastColor = AskColor() # open the color picker
+        color = pickYeastColor.get() # get the color string
+        self.yeastColor.configure(fg_color=color)
+        hex_array[2] = color
+        TopLevelColors().focus
+    def askPhagoColor(self):
+        pickPhagoColor = AskColor() # open the color picker
+        color = pickPhagoColor.get() # get the color string
+        self.phagoColor.configure(fg_color=color)
+        hex_array[3] = color
+        TopLevelColors().focus
+    
 class TopLevelChannels(customtkinter.CTkToplevel):
     def __init__(self):
         super().__init__()
@@ -93,6 +174,7 @@ class TabView(customtkinter.CTkTabview):
         # declare channel window
         
         self.toplevel_channels = None
+        self.toplevel_colors = None
 
         """         MAIN TAB CODE          """
          # buffer frames
@@ -291,9 +373,11 @@ class TabView(customtkinter.CTkTabview):
         self.exportFormat = customtkinter.CTkOptionMenu(colorTab,values=['JPG Sequence','MP4'], variable=self.formatVal, fg_color='white',text_color='black')
         self.exportFormat.grid(row=4, column=2, sticky='ew')
 
+        self.customizeColor = customtkinter.CTkButton(colorTab, text="Customize Colors", command=self.openColorWindow)
+        self.customizeColor.grid(row=5,column=1,padx=5,pady=5)
 
         self.runColor = customtkinter.CTkButton(colorTab, text="Process File", command=self.tryColor)
-        self.runColor.grid(row=4, column=3, sticky='ew')
+        self.runColor.grid(row=5, column=3, sticky='ew',padx=5,pady=5)
         
         self.empty00 = customtkinter.CTkFrame(colorTab, fg_color="transparent", height=5, width=15)
         self.empty00.grid(row=5,column=4,padx=5,pady=5)
@@ -365,6 +449,14 @@ class TabView(customtkinter.CTkTabview):
         # button to count the file
         self.countND2Button = customtkinter.CTkButton(nd2Tab,command=self.processND2,text="Count File",text_color='white')
         self.countND2Button.grid(row=7,column=3, sticky='ew')
+
+
+    def openColorWindow(self):
+        if self.toplevel_colors is None or not self.toplevel_colors.winfo_exists():
+            self.toplevel_colors = TopLevelColors()  # create window if its None or destroyed
+            self.toplevel_colors.focus()
+        else:
+            self.toplevel_colors.focus()  # if window exists focus it
 
 
 
@@ -537,7 +629,6 @@ class TabView(customtkinter.CTkTabview):
         useZ = self.zCheck.get()
         CSVname = self.outputText.get("0.0",END)
         try:
-            print(file_path)
             self.fullCount(file_path, CSVname, 'Single', blurState, useZ)
             time2 = time.perf_counter()
             duration = round(time2-time1,2)
@@ -640,7 +731,7 @@ class TabView(customtkinter.CTkTabview):
         yeastBins, neuBins = fileToBinary(yeastImgs, neuImgs)
         exportFormat = self.exportFormat.get()
         print("coloring images...")
-        multBins = colorTif(yeastBins, neuBins, outputFolder, exportFormat)
+        multBins = colorTif(yeastBins, neuBins, outputFolder, exportFormat, hex_array)
         isColorSave = self.saveColorCheck.get()
         if isColorSave:
             self.saveToImg(yeastBins,neuBins,multBins,outputFolder)

@@ -4,7 +4,7 @@
 
 # Phagocytometer 
 
-###### By Zach Jaffery, v1.1.0
+###### By Zach Jaffery, v1.2.0
 
 ### About
 
@@ -71,5 +71,4 @@ graph TD;
 ```
 ### Coming Soon
 
-* custom cell colors for color mapping
 * support for more images with more than three channels

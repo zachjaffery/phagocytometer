@@ -1,22 +1,21 @@
 import os
 import cv2
 import numpy as np
+from src.declarations import *
 
 
-
-def colorPhago(dir, yeastBin, neuBin, doCount):
+def colorPhago(dir, yeastBin, neuBin, bgr_array=None):
 
     # define kernels
     dilateKernel = np.ones((1,1),np.uint8)
     morphKernel = np.ones((3,3),np.uint8)
 
-    # define colors – will be choosable later on 
-    bgr_grey = np.array([128,128,128])
-    bgr_green = np.array([0, 219, 0])
-
-    bgr_blue = np.array([255, 80, 54])
-
-    bgr_purple = np.array([0,0,255])
+    if bgr_array == None:
+        bgr_array = bgr_default
+    bg = bgr_array[0]
+    neu = bgr_array[1]
+    yeast = bgr_array[2]
+    overlap = bgr_array[3]
 
     hsv_black = (np.array([0,0,0]),np.array([0,0,3])) #black, yeast color
     hsv_50 = (np.array([0,0,127]),np.array([0,0,129])) # 50% grey, background color
@@ -67,10 +66,10 @@ def colorPhago(dir, yeastBin, neuBin, doCount):
     
     
     # color different areas 
-    sub8color[bg_mask > 0] = bgr_grey
-    sub8color[neu_mask > 0] = bgr_green
-    sub8color[yeast_mask > 0] = bgr_blue
-    sub8color[phago_mask > 0] = bgr_purple
+    sub8color[bg_mask > 0] = bg
+    sub8color[neu_mask > 0] = neu
+    sub8color[yeast_mask > 0] = yeast
+    sub8color[phago_mask > 0] = overlap
 
 
     return sub8color, mult
@@ -84,7 +83,7 @@ def colorPhago(dir, yeastBin, neuBin, doCount):
 
 
 
-def colorTif(yeastBins, neuBins, dir, export_format):
+def colorTif(yeastBins, neuBins, dir, export_format, hex_array):
 
 
     if len(yeastBins) == len(neuBins):
@@ -102,6 +101,10 @@ def colorTif(yeastBins, neuBins, dir, export_format):
         if os.path.exists(outfolder) == False:
             os.mkdir(outfolder)
         
+        bgr_array = [[],[],[],[]]
+        for i in range(4):
+            bgr_array[i] = hexToBGR(hex_array[i])
+
         
         for i in range(len(neuBins)):
 
@@ -109,7 +112,7 @@ def colorTif(yeastBins, neuBins, dir, export_format):
             currYeast = yeastBins[i]
             
             filename = 'colored'+str(i+1).rjust(3,'0')+'.jpg'
-            colored_img, mult = colorPhago(dir, currYeast, currNeu, False)
+            colored_img, mult = colorPhago(dir, currYeast, currNeu, bgr_array)
             multBins.append(mult)
             imgs.append(colored_img)
             img_names.append(filename)
@@ -162,3 +165,18 @@ def sequenceToTif(imgs, dir):
     filename = "tiff_color.tif"
     filepath = os.path.join(dir, filename)
     cv2.imwrite(filepath,imgSeq)
+
+def hexToBGR(hex_string):
+
+    bgr_array = [0,0,0]
+    blue_string = hex_string[5:]
+    green_string = hex_string[3:5]
+    red_string = hex_string[1:3]
+
+    bgr_array[0] = int(blue_string,16)
+    bgr_array[1] = int(green_string, 16)
+    bgr_array[2] = int(red_string, 16)
+    return bgr_array
+
+
+

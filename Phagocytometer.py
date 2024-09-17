@@ -720,6 +720,7 @@ class TabView(customtkinter.CTkTabview):
         outputFolder = os.path.join(desktop,'Phagocytometer Files')
         blur = self.blurColorCheck.get()
         global channelNames
+        hex_array = hex_default
         print('getting channel information...')
         channelNames = tifChannelNames(inputtiff)
         

@@ -5,7 +5,7 @@ import pandas as pd
 
 
 from src.CountCells import countCellsInImage
-from src.declarations import z_factor
+from src.Constants import z_factor
 
 def splitAndCountPhago(greenbin, bluebin, binDir, csvname, useZ, saveMult=True):
 

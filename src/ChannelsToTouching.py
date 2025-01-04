@@ -1,11 +1,10 @@
 import numpy as np
 import cv2
-import os
 import pandas as pd
 
 
 from src.CountCells import countCellsInImage
-from src.declarations import z_factor
+from src.Constants import z_factor
 
 def splitAndCountInt(yeastBins, neuBins, csvname, useZ,  binDir, saveMult=False):
 

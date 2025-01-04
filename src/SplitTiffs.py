@@ -1,7 +1,6 @@
 import cv2
-import os
 import exifread
-import logging
+
 
 def tifChannelNames(filepath):
       # code to read exif data from TIF

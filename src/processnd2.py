@@ -1,8 +1,6 @@
 import nd2
 import numpy as np
-import cv2
-import zarr
-import os
+
 
 def nd2ToArray(filepath,dir=None):
 

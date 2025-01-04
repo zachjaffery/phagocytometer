@@ -1,7 +1,5 @@
 from src.CountCells import countCellsInImage
 
-import numpy as np
-import cv2
 import os
 
 import datetime

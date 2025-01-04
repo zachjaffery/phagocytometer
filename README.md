@@ -15,13 +15,8 @@ This program was made to aid in processing timelapse images from epi-fluorescenc
 The program is built completely with python, so this must be downloaded and installed. 
 Additionally, several python packages are required (numpy, pandas, cv2, Tkinter, and CustomTkinter). To install them, paste the following code into your terminal:
 
-    pip install numpy
-    pip install pandas
-    pip install opencv-python
-    sudo apt-get install python3-tk
-    pip install customtkinter
-    
-Alternativally, the packages can manually be downloaded and installed, but ``pip`` function that comes automatically with python is much simpler. 
+    pip install -r requirements.txt
+
 
 ### Usage
 

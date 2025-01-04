@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from src.declarations import *
+from src.Constants import *
 
 
 def colorPhago(dir, yeastBin, neuBin, bgr_array=None):

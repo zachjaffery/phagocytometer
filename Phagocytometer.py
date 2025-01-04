@@ -19,7 +19,7 @@ from src.phagoColorFunc import colorTif
 from src.processnd2 import nd2ToArray, arrayToImg
 from src.ImgToBinary import fileToBinary
 from src.SplitTiffs import tifChannelNames, tifToArrays
-from src.declarations import bgr_default, hex_default
+from src.Constants import bgr_default, hex_default
 
 class TopLevelColors(customtkinter.CTkToplevel):
     def __init__(self):
